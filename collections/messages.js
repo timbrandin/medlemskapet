@@ -16,4 +16,25 @@ if (Meteor.isServer) {
       return [roomCursor, groupCursor, messagesCursor];
     }
   });
+
+  Meteor.startup(function() {
+    SyncedCron.start();
+  });
+
+  SyncedCron.add({
+    name: 'Remove old messages',
+    schedule: function(parser) {
+      // parser is a later.parse object
+      return parser.text('every 10 minutes');
+    },
+    job: function() {
+      var messagesRemoved = removeOldMessages();
+      return messagesRemoved;
+    }
+  });
+
+  function removeOldMessages() {
+    // Remove old messages from later than 7 hrs.
+    return Messages.remove({timestamp: {$lt: (+new Date) - 16 * 3600 * 1000}});
+  }
 }

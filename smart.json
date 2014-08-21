@@ -3,6 +3,7 @@
     "gravatar": {},
     "iron-router": {},
     "cookie": {},
-    "moment": {}
+    "moment": {},
+    "synced-cron": {}
   }
 }

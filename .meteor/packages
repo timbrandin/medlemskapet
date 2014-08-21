@@ -13,3 +13,4 @@ gravatar
 iron-router
 cookie
 moment
+synced-cron

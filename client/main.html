@@ -26,7 +26,8 @@
     {{#each messages}}
     <div class="message">
       <div class="inner">
-        ({{timeSince timestamp}}) {{avatar.name}}:
+        <span class="date">({{calendarDate timestamp}})</span>
+        <span class="avatar">{{avatar.name}}:</span>
         <span class="box">
           {{{green message}}}
         </span>

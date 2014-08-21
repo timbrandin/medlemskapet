@@ -5,7 +5,8 @@
       "gravatar": {},
       "iron-router": {},
       "cookie": {},
-      "moment": {}
+      "moment": {},
+      "synced-cron": {}
     },
     "packages": {
       "gravatar": {
@@ -25,8 +26,13 @@
       },
       "moment": {
         "git": "https://github.com/acreeger/meteor-moment.git",
-        "tag": "v2.6.0",
-        "commit": "26156df681750fd6e6ed77043eef32b6653ebbdf"
+        "tag": "v2.8.1",
+        "commit": "722ea63783d594341023836b7d418ab2567dab8c"
+      },
+      "synced-cron": {
+        "git": "https://github.com/percolatestudio/meteor-synced-cron.git",
+        "tag": "v0.1.1",
+        "commit": "c731ab04e7bf2b0aa7a7e3c4f4750c8c648b791d"
       },
       "crypto-md5": {
         "git": "https://github.com/oortcloud/meteor-crypto-md5.git",

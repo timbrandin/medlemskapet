@@ -34,6 +34,7 @@ textarea {
 
 .message {
   margin-bottom: 15px;
+  width: 550px;
 }
 
 .message .date {

@@ -3,7 +3,7 @@
 
 <template name="chatrooms">
   {{> loginButtons}}
-  <h2>Chatrum</h2>
+  <h3>Chatrum</h3>
   <ul>
     {{#each rooms}}
     <li><a href="/room/{{_id}}">{{name}}</a> ({{activeAvatars}})</li>
@@ -33,13 +33,15 @@
         </span>
       </div>
     </div>
+    {{else}}
+    ----
     {{/each}}
     {{> messageForm}}
   </div>
 </template>
 
 <template name="avatars">
-  <h2>Mina karaktärer</h2>
+  <h3>Mina karaktärer</h3>
   {{#with avatar}}
   Du spelar just nu som: {{name}}
   {{else}}
@@ -100,7 +102,7 @@
 </template>
 
 <template name="playersInRoom">
-  <h2>Karaktärer i spel</h2>
+  <h3>Karaktärer i spel</h3>
   <ul>
     {{#each players}}
     <li>{{name}}</li>

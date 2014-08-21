@@ -1,6 +1,8 @@
 {
   "packages": {
     "gravatar": {},
-    "iron-router": {}
+    "iron-router": {},
+    "cookie": {},
+    "moment": {}
   }
 }

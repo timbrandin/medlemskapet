@@ -3,30 +3,106 @@
 
 <template name="chatrooms">
   {{> loginButtons}}
+  <h2>Chatrum</h2>
   <ul>
     {{#each rooms}}
-    <li><a href="/room/{{_id}}">{{_id}}</a></li>
+    <li><a href="/room/{{_id}}">{{name}}</a> ({{activeAvatars}})</li>
     {{/each}}
   </ul>
+  {{> roomForm}}
+  {{> avatars}}
 </template>
 
-<template name="messages">
-  {{#each messages}}
-  <div class="message {{me}}">
+<template name="chatroom">
+  <div class="chatrooms">
     <div class="inner">
-      <img src="{{picture}}" />
-      <div class="box">
-        {{message}}
-      </div>
+      {{> chatrooms}}
+      <hr>
+      {{> playersInRoom}}
     </div>
   </div>
-  {{/each}}
-  {{> form}}
+  <div class="chatroom">
+    <h3>Medlemskapet {{group.name}}: {{room.name}}</h3>
+    {{#each messages}}
+    <div class="message">
+      <div class="inner">
+        ({{timeSince timestamp}}) {{avatar.name}}:
+        <span class="box">
+          {{{green message}}}
+        </span>
+      </div>
+    </div>
+    {{/each}}
+    {{> messageForm}}
+  </div>
 </template>
 
-<template name="form">
-  <form class="message-form">
-    <textarea></textarea>
-    <button type="submit">Submit</button>
+<template name="avatars">
+  <h2>Mina karaktärer</h2>
+  {{#with avatar}}
+  Du spelar just nu som: {{name}}
+  {{else}}
+  Välj en karaktär att spela med
+  {{/with}}
+  <ul>
+    {{#each avatars}}
+    <li><a href="#">{{name}}</a></li>
+    {{/each}}
+  </ul>
+  {{> avatarForm}}
+</template>
+
+<template name="avatarForm">
+  Lägg till en karaktär.
+  <form class="avatar-form">
+    <input type="text" placeholder="namn" />
+    <button type="submit">Skapa</button>
   </form>
+</template>
+
+<template name="messageForm">
+  <form class="message-form">
+    {{#with avatar}}
+    <div>
+      {{name}}
+      <select>
+        <option value="0">säger till</option>
+        <option value="1">viskar privat till</option>
+      </select>
+      <select>
+        <option value="0">Alla</option>
+      </select>
+    </div>
+    <textarea></textarea>
+    <button type="submit">Skicka</button>
+    {{else}}
+    Välj en karaktär att spela med för att delta i chatten.
+    {{/with}}
+
+  </form>
+</template>
+
+<template name="groupForm">
+  Skapa ny chatt.
+  <form class="group-form">
+    <input type="text" placeholder="namn" />
+    <button type="submit">Skapa</button>
+  </form>
+</template>
+
+<template name="roomForm">
+  Skapa nytt chattrum.
+  <form class="room-form">
+    <input type="text" placeholder="namn" tabindex="0" autofocus>
+    <button type="submit" tabindex="1">Skapa</button>
+  </form>
+</template>
+
+<template name="playersInRoom">
+  <h2>Karaktärer i spel</h2>
+  <ul>
+    {{#each players}}
+    <li>{{name}}</li>
+    {{/each}}
+  </ul>
 </template>

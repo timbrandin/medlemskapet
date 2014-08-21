@@ -1,0 +1,10 @@
+<template name="home">
+{{> loginButtons}}
+<h1>Chattar</h1>
+<ul>
+  {{#each groups}}
+  <li><a href="/{{_id}}">{{name}}</a></li>
+  {{/each}}
+</ul>
+{{> groupForm}}
+</template>

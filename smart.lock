@@ -3,7 +3,9 @@
   "dependencies": {
     "basePackages": {
       "gravatar": {},
-      "iron-router": {}
+      "iron-router": {},
+      "cookie": {},
+      "moment": {}
     },
     "packages": {
       "gravatar": {
@@ -15,6 +17,16 @@
         "git": "https://github.com/EventedMind/iron-router.git",
         "tag": "v0.8.2",
         "commit": "05415a8891ea87a00fb1e2388585f2ca5a38e0da"
+      },
+      "cookie": {
+        "git": "https://github.com/chuangbo/meteor-cookie.git",
+        "tag": "v1.0.2.3",
+        "commit": "f39620ef5650642c38f51b512d82a9b34924b609"
+      },
+      "moment": {
+        "git": "https://github.com/acreeger/meteor-moment.git",
+        "tag": "v2.6.0",
+        "commit": "26156df681750fd6e6ed77043eef32b6653ebbdf"
       },
       "crypto-md5": {
         "git": "https://github.com/oortcloud/meteor-crypto-md5.git",

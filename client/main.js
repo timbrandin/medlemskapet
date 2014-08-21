@@ -1,3 +1,14 @@
+Template.chat.helpers({
+  activeAvatars: function() {
+    return ActiveRooms.find({_room: this._id}).count();
+  },
+
+  avatar: function() {
+    var _avatar = Session.get('avatar');
+    return Avatars.findOne({_id: _avatar});
+  }
+});
+
 Template.chatroom.helpers({
   avatar: function() {
     return Avatars.findOne({_id: this._avatar});
@@ -8,9 +19,31 @@ Template.chatroom.helpers({
   }
 });
 
+Template.logout.events({
+  'click a': function(e, t) {
+    e.preventDefault();
+    Meteor.call('logoutAvatar', Session.get('avatar'));
+    Session.set('avatar', null);
+    Cookie.remove('avatar');
+  }
+})
+
 Template.chatrooms.helpers({
-  activeAvatars: function() {
+  activeAvatarsCount: function() {
     return ActiveRooms.find({_room: this._id}).count();
+  },
+
+  activeAvatars: function() {
+    var avatars = ActiveRooms.find({_room: this._id}, {fields: {_avatar: 1}}).fetch();
+    if (avatars) {
+      var _avatars = _.pluck(avatars, '_avatar');
+      return Avatars.find({_id: {$in: _avatars}});
+    }
+  },
+
+  avatar: function() {
+    var _avatar = Session.get('avatar');
+    return Avatars.findOne({_id: _avatar});
   }
 });
 

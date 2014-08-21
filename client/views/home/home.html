@@ -1,10 +1,12 @@
 <template name="home">
-{{> loginButtons}}
-<h1>Chattar</h1>
-<ul>
-  {{#each groups}}
-  <li><a href="/{{_id}}">{{name}}</a></li>
-  {{/each}}
-</ul>
-{{> groupForm}}
+  <div class="chatroom">
+    <h3>Samskaparna</h3>
+    {{> loginButtons}}
+    <ul>
+      {{#each groups}}
+      <li><a href="/{{_id}}">{{name}}</a></li>
+      {{/each}}
+    </ul>
+    {{> groupForm}}
+  </div>
 </template>

@@ -53,6 +53,11 @@ if (Meteor.isServer) {
         });
       }
 
+    },
+    'logoutAvatar': function(_avatar) {
+      if (_avatar) {
+        ActiveRooms.remove({_avatar: _avatar});
+      }
     }
   });
 

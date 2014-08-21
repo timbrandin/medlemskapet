@@ -1,28 +1,63 @@
 <head>
 </head>
 
+<template name="chat">
+  <div class="chatrooms">
+    <div class="inner">
+      {{#if activeAvatar}}
+      <h3>{{avatar.name}} &ndash; {{> logout}}</h3>
+      {{else}}
+      {{> avatars}}
+      {{/if}}
+    </div>
+  </div>
+  <div class="chatroom">
+    <h3><a href="/">Samskaparna</a> &ndash; {{group.name}}</h3>
+    <ul>
+      {{#each rooms}}
+      <li><a href="/room/{{_id}}">{{name}}</a> ({{activeAvatars}})</li>
+      {{/each}}
+    </ul>
+    {{> roomForm}}
+  </div>
+</template>
+
+<template name="logout">
+  <a href="/logout">Logga ut</a>
+</template>
+
 <template name="chatrooms">
-  {{> loginButtons}}
-  <h3>Chatrum</h3>
+  {{#if activeAvatar}}
+  <h3>{{avatar.name}} &ndash; {{> logout}}</h3>
+  {{else}}
+  {{> avatars}}
+  <h3>Byt rum</h3>
+  {{/if}}
   <ul>
     {{#each rooms}}
-    <li><a href="/room/{{_id}}">{{name}}</a> ({{activeAvatars}})</li>
+    <li>
+      <a href="/room/{{_id}}">{{name}}</a> ({{activeAvatarsCount}})
+      {{#if activeAvatars}}
+      <ul>
+        {{#each activeAvatars}}
+        <li>{{name}}</li>
+        {{/each}}
+      </ul>
+      {{/if}}
+    </li>
     {{/each}}
   </ul>
   {{> roomForm}}
-  {{> avatars}}
 </template>
 
 <template name="chatroom">
   <div class="chatrooms">
     <div class="inner">
       {{> chatrooms}}
-      <hr>
-      {{> playersInRoom}}
     </div>
   </div>
   <div class="chatroom">
-    <h3>Medlemskapet {{group.name}}: {{room.name}}</h3>
+    <h3><a href="/">Samskaparna</a> &ndash; <a href="/{{group._id}}">{{group.name}}</a>: {{room.name}}</h3>
     {{#each messages}}
     <div class="message">
       <div class="inner">
@@ -41,12 +76,7 @@
 </template>
 
 <template name="avatars">
-  <h3>Mina karaktärer</h3>
-  {{#with avatar}}
-  Du spelar just nu som: {{name}}
-  {{else}}
-  Välj en karaktär att spela med
-  {{/with}}
+  <h3>Välj karaktär</h3>
   <ul>
     {{#each avatars}}
     <li><a href="#">{{name}}</a></li>
@@ -86,19 +116,23 @@
 </template>
 
 <template name="groupForm">
+  {{#if currentUser}}
   Skapa ny chatt.
   <form class="group-form">
     <input type="text" placeholder="namn" />
     <button type="submit">Skapa</button>
   </form>
+  {{/if}}
 </template>
 
 <template name="roomForm">
+  {{#if currentUser}}
   Skapa nytt chattrum.
   <form class="room-form">
     <input type="text" placeholder="namn" tabindex="0" autofocus>
     <button type="submit" tabindex="1">Skapa</button>
   </form>
+  {{/if}}
 </template>
 
 <template name="playersInRoom">

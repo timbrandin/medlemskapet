@@ -45,19 +45,25 @@ Router.map(function() {
 
   this.route('chatrooms', {
     path: '/:group',
+    template: 'chat',
     waitOn: function() {
       Meteor.subscribe('avatars', this.params.group);
       Meteor.subscribe('activerooms', this.params.group);
       return Meteor.subscribe('chatrooms', this.params.group);
     },
     data: function() {
-      return {rooms: Chatrooms.find({}, {sort: {name: 1}})};
+      return {
+        rooms: Chatrooms.find({}, {sort: {name: 1}}),
+        group: Groups.findOne()
+      };
     }
   });
 
   this.route('groupLogin', {
     path: '/:group/login'
   });
+
+
 
   this.route('home', {
     path: '/',

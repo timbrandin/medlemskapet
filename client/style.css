@@ -4,6 +4,7 @@ body {
   font-size: 17px;
   line-height: 1.3;
   color: white;
+  margin: 0;
 }
 
 a {
@@ -37,6 +38,18 @@ textarea {
   width: 550px;
 }
 
+h1 a, h2 a, h3 a, h4 a {
+  text-decoration: none;
+}
+
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover {
+  text-decoration: underline;
+}
+
+.right {
+  float: right;
+}
+
 .message .date {
   color: #fff;
 }
@@ -66,13 +79,14 @@ textarea {
 }
 
 .chatroom {
-  width: 80%;
+  width: 70%;
   margin-bottom: 120px;
+  padding: 0 10px;
 }
 
 .chatrooms {
   float: right;
-  width: 20%;
+  width: 30%;
   margin-bottom: 80px;
   position: relative;
 }
@@ -81,7 +95,15 @@ textarea {
   position: fixed;
   top: 0;
   right: 0;
-  width: 20%;
+  width: 30%;
+  padding: 0 10px;
+}
+
+hr {
+  border: none;
+  border-bottom: solid 1px #ccc;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .green {

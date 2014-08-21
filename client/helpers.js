@@ -8,6 +8,11 @@ UI.registerHelper('timeSince', function(date) {
   }
 });
 
+// Get the current active avatar.
+UI.registerHelper('activeAvatar', function() {
+  return Session.get('avatar');
+});
+
 /**
  * Format number with commas and decimals.
  */

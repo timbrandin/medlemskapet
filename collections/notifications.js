@@ -51,7 +51,7 @@ if (Meteor.isServer) {
       RoomSubs.remove({_id: sub._subscriptionId});
     });
 
-    return [UserNotifications.find({_sub: sub._subscriptionId}), RoomSubs.find()];
+    return UserNotifications.find({_sub: sub._subscriptionId});
   });
 }
 else {

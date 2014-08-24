@@ -92,8 +92,8 @@ Template.messageForm.events({
     Messages.insert({
       _user: Session.get('_user'),
       _avatar: Session.get('avatar'),
-      message: message.replace(/[^\w\s*.\-_(){}+?!/\\$%&€"'#´`*'¨^:;,0-9@£§|\[\]{}åäö]/gi, ''),
-      timestamp: (+new Date),
+      message: message.replace(/[^\w\s*.\-_(){}+=?!/\\$%&€"'#´`*'¨^:;,0-9@£§|\[\]{}åäö]/gi, ''),
+      timestamp: TimeSync.serverTime(),
       _room: Router.current().params._room
     });
 

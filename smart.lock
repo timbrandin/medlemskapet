@@ -8,7 +8,8 @@
       "moment": {},
       "synced-cron": {},
       "subs-manager": {},
-      "kadira": {}
+      "kadira": {},
+      "timesync": {}
     },
     "packages": {
       "gravatar": {
@@ -45,6 +46,11 @@
         "git": "https://github.com/meteorhacks/kadira.git",
         "tag": "v2.4.13",
         "commit": "1f3c1a427084af5a2eca2e299eb65bc01387df8a"
+      },
+      "timesync": {
+        "git": "https://github.com/mizzao/meteor-timesync.git",
+        "tag": "v0.2.1",
+        "commit": "fa4abd511f4e32a3c5d22795ce2c1e8369428fac"
       },
       "crypto-md5": {
         "git": "https://github.com/oortcloud/meteor-crypto-md5.git",

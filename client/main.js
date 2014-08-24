@@ -1,6 +1,12 @@
 Template.chat.helpers({
   activeAvatars: function() {
-    return ActiveRooms.find({_room: this._id}).count();
+    var activeAvatarTabs = ActiveUserTabs.find({_room: this._id, _avatar: {$not: null}}).fetch();
+    var activeAvatars = _.uniq(_.pluck(activeAvatarTabs, '_avatar'));
+
+    var activeUserTabs = ActiveUserTabs.find({_room: this._id, _avatar: null}).fetch();
+    var activeUsers = _.uniq(_.pluck(activeUserTabs, '_user'));
+
+    return activeUsers.length + activeAvatars.length;
   },
 
   avatar: function() {
@@ -9,32 +15,56 @@ Template.chat.helpers({
   }
 });
 
-Template.chatroom.helpers({
+Template.messages.helpers({
   avatar: function() {
     return Avatars.findOne({_id: this._avatar});
   },
 
-  green: function(message) {
-    return message.replace(/(\*[^*]+\*)/g, '<span class="green">$1</span>');
+  filter: function(message) {
+    return message
+      // Make URLs to links.
+      .replace(/(https?:\/\/?[\da-z\.-]+\.[a-z\.]{2,6}(?:[\/\w \.-]*)*\/?\?[^\s]*)/ig, '<a href="$1" target="_blank">$1</a>')
+      // Make ** in green color.
+      .replace(/(\*[^*]+\*)/g, '<span class="green">$1</span>');
   }
 });
 
 Template.logout.events({
   'click a': function(e, t) {
     e.preventDefault();
-    Meteor.call('logoutAvatar', Session.get('avatar'));
     Session.set('avatar', null);
-    Cookie.remove('avatar');
   }
-})
+});
+
+Template.notifications.events({
+  'click a': function(e, t) {
+    e.preventDefault();
+
+    Notification.requestPermission();
+
+    Session.set('notifications', !Session.get('notifications'));
+  }
+});
+
+Template.notifications.helpers({
+  'listening': function() {
+    return Session.get('notifications');
+  }
+});
 
 Template.chatrooms.helpers({
   activeAvatarsCount: function() {
-    return ActiveRooms.find({_room: this._id}).count();
+    var activeAvatarTabs = ActiveUserTabs.find({_room: this._id, _avatar: {$not: null}}).fetch();
+    var activeAvatars = _.uniq(_.pluck(activeAvatarTabs, '_avatar'));
+
+    var activeUserTabs = ActiveUserTabs.find({_room: this._id, _avatar: null}).fetch();
+    var activeUsers = _.uniq(_.pluck(activeUserTabs, '_user'));
+
+    return activeUsers.length + activeAvatars.length;
   },
 
   activeAvatars: function() {
-    var avatars = ActiveRooms.find({_room: this._id}, {fields: {_avatar: 1}}).fetch();
+    var avatars = ActiveUserTabs.find({_room: this._id}, {fields: {_avatar: 1}}).fetch();
     if (avatars) {
       var _avatars = _.pluck(avatars, '_avatar');
       return Avatars.find({_id: {$in: _avatars}});
@@ -60,11 +90,11 @@ Template.messageForm.events({
     var message = template.find('textarea').value;
 
     Messages.insert({
-      _user: (Meteor.user() ? Meteor.user()._id : null),
+      _user: Session.get('_user'),
       _avatar: Session.get('avatar'),
-      message: message.replace(/[^\w\s*.-_(){}+?!/\\$%&€"'#´`*'¨^:;,0-9@£§|\[\]{}åäö]/gi, ''),
+      message: message.replace(/[^\w\s*.\-_(){}+?!/\\$%&€"'#´`*'¨^:;,0-9@£§|\[\]{}åäö]/gi, ''),
       timestamp: (+new Date),
-      _room: Router.current().params.chatroom
+      _room: Router.current().params._room
     });
 
     // Clear the textarea.
@@ -82,6 +112,9 @@ Template.groupForm.events({
       name: name,
       timestamp: (+new Date)
     });
+
+    // Clear the input.
+    template.find('input').value = '';
   }
 });
 
@@ -90,10 +123,10 @@ Template.roomForm.events({
     event.preventDefault();
     var name = template.find('input').value;
     var _group;
-    if (Router.current().params.group) {
-      _group = Router.current().params.group;
+    if (Router.current().params._group) {
+      _group = Router.current().params._group;
     }
-    else if (Router.current().params.chatroom) {
+    else if (Router.current().params._room) {
       var group = Groups.findOne();
       _group = group._id;
     }
@@ -104,12 +137,15 @@ Template.roomForm.events({
       timestamp: (+new Date),
       _group: _group
     });
+
+    // Clear the input.
+    template.find('input').value = '';
   }
 });
 
 Template.avatars.helpers({
   avatars: function() {
-    return Avatars.find({_user: Session.get('user')});
+    return Avatars.find({_user: Session.get('_user')});
   },
   avatar: function() {
     var _avatar = Session.get('avatar');
@@ -120,18 +156,7 @@ Template.avatars.helpers({
 Template.avatars.events({
   'click li a': function(event, template) {
     event.preventDefault();
-    // Remove the avatar from the room when switching.
-    var _room = Router.current().params.chatroom;
-    var _currentAvatar = Session.get('avatar');
-    if (_room && _currentAvatar != this._id) {
-      var active = ActiveRooms.findOne({_avatar: Session.get('avatar'), _room: _room});
-      if (active) {
-        ActiveRooms.remove({_id: active._id});
-      }
-    }
-
     Session.set('avatar', this._id);
-    Cookie.set('avatar', this._id);
   }
 });
 
@@ -140,12 +165,12 @@ Template.avatarForm.events({
     event.preventDefault();
     var name = template.find('input').value;
     var _group;
-    if (Router.current().params.group) {
-      _group = Router.current().params.group;
+    if (Router.current().params._group) {
+      _group = Router.current().params._group;
     }
-    else if (Router.current().params.chatroom) {
-      var group = Groups.findOne();
-      _group = group._id;
+    else if (Router.current().params._room) {
+      var room = Chatrooms.findOne({_id: Router.current().params._room});
+      _group = room._group;
     }
 
     Avatars.insert({
@@ -153,14 +178,17 @@ Template.avatarForm.events({
       name: name,
       timestamp: (+new Date),
       _group: _group,
-      _user: Session.get('user')
+      _user: Session.get('_user')
     });
+
+    // Clear the input.
+    template.find('input').value = '';
   }
 });
 
 Template.playersInRoom.helpers({
   players: function() {
-    var avatars = ActiveRooms.find().fetch();
+    var avatars = ActiveUserTabs.find().fetch();
     if (avatars) {
       var avatarIds = _.pluck(avatars, '_avatar');
       if (avatarIds.length > 0) {

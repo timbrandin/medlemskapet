@@ -4,6 +4,8 @@
     "iron-router": {},
     "cookie": {},
     "moment": {},
-    "synced-cron": {}
+    "synced-cron": {},
+    "subs-manager": {},
+    "kadira": {}
   }
 }

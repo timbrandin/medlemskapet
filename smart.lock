@@ -6,7 +6,9 @@
       "iron-router": {},
       "cookie": {},
       "moment": {},
-      "synced-cron": {}
+      "synced-cron": {},
+      "subs-manager": {},
+      "kadira": {}
     },
     "packages": {
       "gravatar": {
@@ -33,6 +35,16 @@
         "git": "https://github.com/percolatestudio/meteor-synced-cron.git",
         "tag": "v0.1.1",
         "commit": "c731ab04e7bf2b0aa7a7e3c4f4750c8c648b791d"
+      },
+      "subs-manager": {
+        "git": "https://github.com/meteorhacks/subs-manager.git",
+        "tag": "v1.0.2",
+        "commit": "029236aa004062cc10d8c04e79907d6fe223ecf7"
+      },
+      "kadira": {
+        "git": "https://github.com/meteorhacks/kadira.git",
+        "tag": "v2.4.13",
+        "commit": "1f3c1a427084af5a2eca2e299eb65bc01387df8a"
       },
       "crypto-md5": {
         "git": "https://github.com/oortcloud/meteor-crypto-md5.git",

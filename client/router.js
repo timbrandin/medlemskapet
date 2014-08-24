@@ -5,70 +5,72 @@ Router.configure({
       user = Meteor.uuid();
       Cookie.set('user', user);
     }
-    Session.set('user', user);
-
-    var _avatar = Cookie.get('avatar');
-    if (_avatar) {
-      Session.set('avatar', _avatar);
-    }
+    Session.set('_user', user);
   },
+});
+
+var subs = new SubsManager({
+  // will be cached only 20 recently used subscriptions
+  cacheLimit: 20,
+  // any subscription will be expired after 5 minutes of inactivity
+  expireIn: 60 * 8
 });
 
 Router.map(function() {
 
   this.route('chatroom', {
-    path: '/room/:chatroom',
+    path: '/room/:_room',
     waitOn: function() {
       var group = Groups.findOne();
       if (group) {
-        Meteor.subscribe('chatrooms', group._id);
-        Meteor.subscribe('activerooms', group._id);
-        Meteor.subscribe('avatars', group._id);
+        subs.subscribe('chatrooms', group._id);
+        subs.subscribe('avatars', group._id);
       }
-      return Meteor.subscribe('messages', this.params.chatroom, Session.get('avatar'));
+      return subs.subscribe('messages', this.params._room, Session.get('avatar'));
+    },
+    onAfterAction: function() {
+      var scroll = Session.get(['scroll' + this.params._room]) || 0;
+
+      Meteor.setTimeout(function() {
+        $(window).scrollTop(scroll);
+      }, 0);
     },
     data: function() {
-      return {
-        messages: Messages.find({_room: this.params.chatroom}, {sort: {timestamp: 1}}),
-        rooms: Chatrooms.find({}, {sort: {name: 1}}),
-        room: Chatrooms.findOne({_id: this.params.chatroom}),
-        group: Groups.findOne()
-      };
+      var room = Chatrooms.findOne({_id: this.params._room});
+
+      if (room) {
+        return {
+          messages: Messages.find({_room: this.params._room}, {sort: {timestamp: 1}}),
+          rooms: Chatrooms.find({}, {sort: {name: 1}}),
+          room: room,
+          group: Groups.findOne({_id: room._group})
+        };
+      }
     },
     onStop: function() {
-      var avatar = ActiveRooms.findOne({_avatar: Session.get('avatar'), _room: this.params.chatroom});
-      if (avatar) {
-        ActiveRooms.remove({_id: avatar._id});
-      }
+      Session.set(['scroll' + this.params._room].join('_'), $(window).scrollTop());
     }
   });
 
   this.route('chatrooms', {
-    path: '/:group',
+    path: '/:_group',
     template: 'chat',
     waitOn: function() {
-      Meteor.subscribe('avatars', this.params.group);
-      Meteor.subscribe('activerooms', this.params.group);
-      return Meteor.subscribe('chatrooms', this.params.group);
+      subs.subscribe('avatars', this.params._group);
+      return subs.subscribe('chatrooms', this.params._group);
     },
     data: function() {
       return {
-        rooms: Chatrooms.find({}, {sort: {name: 1}}),
-        group: Groups.findOne()
+        rooms: Chatrooms.find({_group: this.params._group}, {sort: {name: 1}}),
+        group: Groups.findOne({_id: this.params._group})
       };
     }
   });
 
-  this.route('groupLogin', {
-    path: '/:group/login'
-  });
-
-
-
   this.route('home', {
     path: '/',
     waitOn: function() {
-      return Meteor.subscribe('groups');
+      return subs.subscribe('groups');
     },
     data: function() {
       return {groups: Groups.find({}, {sort: {name: 1}})};

@@ -17,7 +17,7 @@ UI.registerHelper('activeAvatar', function() {
  * Format number with commas and decimals.
  */
 UI.registerHelper('calendarDate', function(date) {
-  moment.lang('sv', {
+  moment.locale('sv', {
     weekdays : "måndag_tisdag_onsdag_torsdag_fredag_lördag_söndag".split("_"),
     calendar : {
         lastDay : '[igår]',

@@ -1,4 +1,5 @@
 <head>
+  <title>Samskaparna</title>
 </head>
 
 <template name="chat">
@@ -26,6 +27,14 @@
   <a href="/logout">Logga ut</a>
 </template>
 
+<template name="notifications">
+  {{#if listening}}
+  <a href="/notifications/">Stäng av notiser</a>
+  {{else}}
+  <a href="/notifications/">Sätt på notiser</a>
+  {{/if}}
+</template>
+
 <template name="chatrooms">
   {{#if activeAvatar}}
   <h3>{{avatar.name}} &ndash; {{> logout}}</h3>
@@ -33,6 +42,7 @@
   {{> avatars}}
   <h3>Byt rum</h3>
   {{/if}}
+  {{> notifications}}
   <ul>
     {{#each rooms}}
     <li>
@@ -57,22 +67,29 @@
     </div>
   </div>
   <div class="chatroom">
-    <h3><a href="/">Samskaparna</a> &ndash; <a href="/{{group._id}}">{{group.name}}</a>: {{room.name}}</h3>
-    {{#each messages}}
-    <div class="message">
-      <div class="inner">
-        <span class="date">({{calendarDate timestamp}})</span>
-        <span class="avatar">{{avatar.name}}:</span>
-        <span class="box">
-          {{{green message}}}
-        </span>
-      </div>
+    <div class="inner">
+      <h3><a href="/">Samskaparna</a> &ndash; <a href="/{{group._id}}">{{group.name}}</a>: {{room.name}}</h3>
+      {{> messages}}
+
+      {{> messageForm}}
     </div>
-    {{else}}
-    ----
-    {{/each}}
-    {{> messageForm}}
   </div>
+</template>
+
+<template name="messages">
+  {{#each messages}}
+  <div class="message">
+    <div class="inner">
+      <span class="date">({{calendarDate timestamp}})</span>
+      <span class="avatar">{{avatar.name}}:</span>
+      <span class="box">
+        {{{filter message}}}
+      </span>
+    </div>
+  </div>
+  {{else}}
+  ----
+  {{/each}}
 </template>
 
 <template name="avatars">

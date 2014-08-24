@@ -36,6 +36,7 @@ textarea {
 .message {
   margin-bottom: 15px;
   width: 550px;
+  max-width: 100%;
 }
 
 h1 a, h2 a, h3 a, h4 a {
@@ -62,7 +63,7 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover {
   color: #ccc;
 }
 
-.chatroom button {
+.message-form button {
   width: 20%;
   height: 56px;
   line-height: 53px;
@@ -84,19 +85,22 @@ h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover {
   padding: 0 10px;
 }
 
-.chatrooms {
-  float: right;
-  width: 30%;
-  margin-bottom: 80px;
-  position: relative;
+.chatroom .inner {
+  padding-right: 10px;
 }
 
-.chatrooms .inner {
+.chatrooms {
   position: fixed;
   top: 0;
   right: 0;
   width: 30%;
+  margin-bottom: 80px;
+}
+
+.chatrooms .inner {
+
   padding: 0 10px;
+  overflow: scroll;
 }
 
 hr {

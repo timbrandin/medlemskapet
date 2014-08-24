@@ -20,8 +20,6 @@ if (Meteor.isServer) {
     Notifications.find().observe({
       added: function(notification) {
         var subs = RoomSubs.find({
-          listening: true,
-          hasFocus: false,
           _room: notification._room,
           _user: {$ne: notification._user}
         });
@@ -41,10 +39,11 @@ if (Meteor.isServer) {
   // Keep track of user subscriptions as they come in and close.
   Meteor.publish('notifications', function(keys, options) {
     var sub = this;
+    options = options || {};
 
     if (keys) {
       _.extend(keys, {_id: sub._subscriptionId});
-      _.extend(options || {}, keys);
+      _.extend(options, keys);
       RoomSubs.upsert(keys, options);
     }
 
@@ -93,14 +92,20 @@ else {
 
     UserNotifications.find().observe({
       added: function(notification) {
-        sendNotification(notification);
+        if (!Session.get('hasFocus') && Session.get('notifications')) {
+          sendNotification(notification);
+        }
+        else {
+          UserNotifications.remove({_id: notification._id});
+        }
       }
     });
 
     function sendNotification(options) {
       if (Notification && Notification.permission == 'granted') {
         var notification = new Notification(options.title, {
-          body: options.body
+          body: options.body,
+          icon: document.location.origin + "/favicon-128.png"
         });
 
         desktopNotifications.push(notification);
@@ -135,9 +140,6 @@ else {
       Meteor.subscribe('notifications', {
         _user: Session.get('_user') || null,
         _room: route.params._room || null
-      }, {
-        hasFocus: Session.get('hasFocus'),
-        listening: Session.get('notifications')
       });
     }
   });

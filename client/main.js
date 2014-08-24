@@ -150,7 +150,12 @@ Template.roomForm.events({
 
 Template.avatars.helpers({
   avatars: function() {
-    return Avatars.find({_user: Session.get('_user')});
+    if (Meteor.user()) {
+      return Avatars.find({$or: [{_user: Session.get('_user')}, {_owner: Meteor.user()._id}]});
+    }
+    else {
+      return Avatars.find({_user: Session.get('_user')});
+    }
   },
   avatar: function() {
     var _avatar = Session.get('avatar');

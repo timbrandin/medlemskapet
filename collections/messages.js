@@ -50,18 +50,20 @@ if (Meteor.isServer) {
   function createNotification(message) {
     var avatar = Avatars.findOne({_id: message._avatar});
     var room = Chatrooms.findOne({_id: message._room});
-    var group = Groups.findOne({_id: room._group});
+    if (room) {
+      var group = Groups.findOne({_id: room._group});
 
-    if (avatar && room && group) {
-      var title = avatar.name + ' skrev i ' + group.name + ': ' + room.name;
+      if (avatar && room && group) {
+        var title = avatar.name + ' skrev i ' + group.name + ': ' + room.name;
 
-      Notifications.insert({
-        title: title,
-        body: message.message,
-        route: '/room/' + room._id,
-        _room: room._id,
-        _user: message._user
-      });
+        Notifications.insert({
+          title: title,
+          body: message.message,
+          route: '/room/' + room._id,
+          _room: room._id,
+          _user: message._user
+        });
+      }
     }
   }
 

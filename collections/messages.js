@@ -23,6 +23,13 @@ if (Meteor.isServer) {
     });
   });
 
+  Messages.allow({
+    insert: function(userId, message) {
+      checkTimestamp(message);
+      return true;
+    }
+  });
+
   SyncedCron.add({
     name: 'Remove old messages',
     schedule: function(parser) {
@@ -57,9 +64,8 @@ if (Meteor.isServer) {
       });
     }
   }
-}
-else {
 
-
-
+  function checkTimestamp(message) {
+    Messages.update({_id: message._id}, {$set: {timestamp: (+new Date)}});
+  }
 }

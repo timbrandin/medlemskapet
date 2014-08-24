@@ -28,7 +28,7 @@ Template.messages.helpers({
   filter: function(message) {
     return message
       // Make URLs to links.
-      .replace(/(https?:\/\/?[\da-z\.-]+\.[a-z\.]{2,6}(?:[\/\w \.\-%]*)*\/?(?:\?[^\s]*)?)/ig, '<a href="$1" target="_blank">$1</a>')
+      .replace(/(https?:\/\/?[\da-z\.-]+\.[a-z\.]{2,6}(?:[\/\w\.\-%]*)*\/?(?:\?[^\s]*)?)/ig, '<a href="$1" target="_blank">$1</a>')
       // Make ** in green color.
       .replace(/(\*[^*]+\*)/g, '<span class="green">$1</span>');
   }

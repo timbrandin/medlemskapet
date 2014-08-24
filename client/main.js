@@ -17,7 +17,12 @@ Template.chat.helpers({
 
 Template.messages.helpers({
   avatar: function() {
-    return Avatars.findOne({_id: this._avatar});
+    var avatar = Avatars.findOne({_id: this._avatar});
+    return avatar ? avatar : (this.avatarName ? {name: this.avatarName} : '');
+  },
+
+  localTime: function() {
+    return this.timestamp - TimeSync.serverOffset();
   },
 
   filter: function(message) {
@@ -157,6 +162,10 @@ Template.avatars.events({
   'click li a': function(event, template) {
     event.preventDefault();
     Session.set('avatar', this._id);
+  },
+
+  'click .remove': function() {
+    Avatars.remove({_id: this._id});
   }
 });
 

@@ -80,7 +80,7 @@
   {{#each messages}}
   <div class="message">
     <div class="inner">
-      <span class="date">({{calendarDate timestamp}})</span>
+      <span class="date">({{calendarDate localTime}})</span>
       <span class="avatar">{{avatar.name}}:</span>
       <span class="box">
         {{{filter message}}}
@@ -96,7 +96,7 @@
   <h3>Välj karaktär</h3>
   <ul>
     {{#each avatars}}
-    <li><a href="#">{{name}}</a></li>
+    <li><a href="#">{{name}}</a> <button class="remove">X</button></li>
     {{/each}}
   </ul>
   {{> avatarForm}}

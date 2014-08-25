@@ -3,10 +3,14 @@ Template.chat.helpers({
     var activeAvatarTabs = ActiveUserTabs.find({_room: this._id, _avatar: {$not: null}}).fetch();
     var activeAvatars = _.uniq(_.pluck(activeAvatarTabs, '_avatar'));
 
+    return activeAvatars.length;
+  },
+
+  activeUsers: function() {
     var activeUserTabs = ActiveUserTabs.find({_room: this._id, _avatar: null}).fetch();
     var activeUsers = _.uniq(_.pluck(activeUserTabs, '_user'));
 
-    return activeUsers.length + activeAvatars.length;
+    return activeUsers.length;
   },
 
   avatar: function() {
@@ -62,10 +66,14 @@ Template.chatrooms.helpers({
     var activeAvatarTabs = ActiveUserTabs.find({_room: this._id, _avatar: {$not: null}}).fetch();
     var activeAvatars = _.uniq(_.pluck(activeAvatarTabs, '_avatar'));
 
+    return activeAvatars.length;
+  },
+
+  activeUsers: function() {
     var activeUserTabs = ActiveUserTabs.find({_room: this._id, _avatar: null}).fetch();
     var activeUsers = _.uniq(_.pluck(activeUserTabs, '_user'));
 
-    return activeUsers.length + activeAvatars.length;
+    return activeUsers.length;
   },
 
   activeAvatars: function() {

@@ -37,7 +37,10 @@
     <h3><a href="/">Samskaparna</a> &ndash; {{group.name}}</h3>
     <ul>
       {{#each rooms}}
-      <li><a href="/room/{{_id}}">{{name}}</a> ({{activeAvatars}})</li>
+      <li><a href="/room/{{_id}}">{{name}}</a>
+        <span title="{{activeAvatars}} aktiva karaktärer">({{activeAvatars}})</span>
+        <span title="{{activeUsers}} aktiva besökare">+{{activeUsers}}</span>
+      </li>
       {{/each}}
     </ul>
     {{> roomForm}}
@@ -67,7 +70,9 @@
   <ul>
     {{#each rooms}}
     <li>
-      <a href="/room/{{_id}}">{{name}}</a> ({{activeAvatarsCount}})
+      <a href="/room/{{_id}}">{{name}}</a>
+        <span title="{{activeAvatarsCount}} aktiva karaktärer">({{activeAvatarsCount}})</span>
+        <span title="{{activeUsers}} aktiva besökare">+{{activeUsers}}</span>
       {{#if activeAvatars}}
       <ul>
         {{#each activeAvatars}}
